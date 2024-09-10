@@ -1,0 +1,95 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+// Definition of the tree node
+typedef struct Node {
+    int data;
+    struct Node* left;
+    struct Node* right;
+} Node;
+
+// Function to create a new node
+Node* createNode(int data) {
+    Node* newNode = (Node*)malloc(sizeof(Node));
+    newNode->data = data;
+    newNode->left = NULL;
+    newNode->right = NULL;
+    return newNode;
+}
+
+// Function to insert a new node into the BST
+Node* insertNode(Node* root, int data) {
+    if (root == NULL) {
+        return createNode(data);
+    }
+
+    if (data < root->data) {
+        root->left = insertNode(root->left, data);
+    } else if (data > root->data) {
+        root->right = insertNode(root->right, data);
+    }
+
+    return root;
+}
+
+// Function to calculate the height of the binary tree
+int calculateHeight(Node* root) {
+    if (root == NULL) {
+        return -1; // Height of an empty tree is -1
+    }
+
+    // Calculate the height of left and right subtrees
+    int leftHeight = calculateHeight(root->left);
+    int rightHeight = calculateHeight(root->right);
+
+    // The height of the tree is the maximum height of its subtrees plus 1
+    return (leftHeight > rightHeight ? leftHeight : rightHeight) + 1;
+}
+
+// Function to perform in-order traversal
+void inOrderTraversal(Node* root) {
+    if (root == NULL) {
+        return;
+    }
+
+    inOrderTraversal(root->left);
+    printf("%d ", root->data);
+    inOrderTraversal(root->right);
+}
+
+// Function to free the memory allocated for the tree
+void freeTree(Node* root) {
+    if (root == NULL) {
+        return;
+    }
+    freeTree(root->left);
+    freeTree(root->right);
+    free(root);
+}
+
+// Main function to demonstrate the insertion, in-order traversal, and height calculation
+int main() {
+    Node* root = NULL; // Initialize an empty tree
+
+    // Insert elements into the BST
+    root = insertNode(root, 4);
+    insertNode(root, 2);
+    insertNode(root, 6);
+    insertNode(root, 1);
+    insertNode(root, 3);
+    insertNode(root, 5);
+    insertNode(root, 7);
+
+    printf("In-order Traversal of the Binary Search Tree:\n");
+    inOrderTraversal(root);
+    printf("\n");
+
+    // Calculate the height of the binary tree
+    int height = calculateHeight(root);
+    printf("Height of the Binary Search Tree: %d\n", height);
+
+    // Free allocated memory
+    freeTree(root);
+
+    return 0;
+}
